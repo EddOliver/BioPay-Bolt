@@ -8,8 +8,17 @@ import {
   Alert,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Shield, Star, Gift, Camera, CircleCheck as CheckCircle, Circle as XCircle, TrendingUp } from 'lucide-react-native';
+import {
+  Shield,
+  Star,
+  Gift,
+  Camera,
+  CheckCircle,
+  XCircle,
+  TrendingUp,
+} from 'lucide-react-native';
 import { useIdentityStore } from '@/stores/identityStore';
+import { useThemeStore } from '@/stores/themeStore';
 
 export default function IdentityScreen() {
   const {
@@ -20,6 +29,8 @@ export default function IdentityScreen() {
     completeFaceVerification,
     claimRewards,
   } = useIdentityStore();
+
+  const { colors, isDarkMode } = useThemeStore();
 
   const handleFaceVerification = async () => {
     try {
@@ -47,13 +58,13 @@ export default function IdentityScreen() {
   const getVerificationColor = () => {
     switch (verificationLevel) {
       case 'premium':
-        return '#10B981';
+        return colors.success;
       case 'enhanced':
-        return '#3B82F6';
+        return colors.primary;
       case 'basic':
-        return '#F59E0B';
+        return colors.warning;
       default:
-        return '#EF4444';
+        return colors.error;
     }
   };
 
@@ -61,10 +72,12 @@ export default function IdentityScreen() {
     return isVerified ? CheckCircle : XCircle;
   };
 
+  const styles = createStyles(colors);
+
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={['#667eea', '#764ba2']}
+        colors={isDarkMode ? ['#1E293B', '#334155'] : ['#667eea', '#764ba2']}
         style={styles.header}
       >
         <Text style={styles.title}>Identity</Text>
@@ -103,15 +116,18 @@ export default function IdentityScreen() {
         {/* Trust Score */}
         <View style={styles.scoreCard}>
           <View style={styles.scoreHeader}>
-            <Star size={24} color="#F59E0B" />
+            <Star size={24} color={colors.warning} />
             <Text style={styles.scoreTitle}>Trust Score</Text>
           </View>
-          <Text style={styles.scoreValue}>{trustScore}/100</Text>
+          <Text style={[styles.scoreValue, { color: colors.warning }]}>{trustScore}/100</Text>
           <View style={styles.scoreBar}>
             <View
               style={[
                 styles.scoreProgress,
-                { width: `${trustScore}%` }
+                { 
+                  width: `${trustScore}%`,
+                  backgroundColor: colors.warning
+                }
               ]}
             />
           </View>
@@ -171,7 +187,7 @@ export default function IdentityScreen() {
           
           <View style={styles.benefitsList}>
             <View style={styles.benefitItem}>
-              <TrendingUp size={20} color="#10B981" />
+              <TrendingUp size={20} color={colors.success} />
               <Text style={styles.benefitText}>
                 Lower transaction fees for verified users
               </Text>
@@ -185,14 +201,14 @@ export default function IdentityScreen() {
             </View>
             
             <View style={styles.benefitItem}>
-              <Shield size={20} color="#3B82F6" />
+              <Shield size={20} color={colors.primary} />
               <Text style={styles.benefitText}>
                 Access to premium BioPay features
               </Text>
             </View>
             
             <View style={styles.benefitItem}>
-              <Star size={20} color="#F59E0B" />
+              <Star size={20} color={colors.warning} />
               <Text style={styles.benefitText}>
                 Higher trust score in the network
               </Text>
@@ -204,10 +220,10 @@ export default function IdentityScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.background,
   },
   header: {
     paddingTop: 60,
@@ -229,7 +245,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
   },
   statusCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.card,
     borderRadius: 16,
     padding: 20,
     marginTop: 24,
@@ -257,7 +273,7 @@ const styles = StyleSheet.create({
   statusTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1F2937',
+    color: colors.text,
     marginBottom: 4,
   },
   statusLevel: {
@@ -265,7 +281,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   scoreCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.card,
     borderRadius: 16,
     padding: 20,
     marginTop: 16,
@@ -283,28 +299,26 @@ const styles = StyleSheet.create({
   scoreTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1F2937',
+    color: colors.text,
     marginLeft: 8,
   },
   scoreValue: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#F59E0B',
     marginBottom: 12,
   },
   scoreBar: {
     height: 8,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: colors.border,
     borderRadius: 4,
     overflow: 'hidden',
   },
   scoreProgress: {
     height: '100%',
-    backgroundColor: '#F59E0B',
     borderRadius: 4,
   },
   rewardsCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.card,
     borderRadius: 16,
     padding: 20,
     marginTop: 16,
@@ -322,7 +336,7 @@ const styles = StyleSheet.create({
   rewardsTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1F2937',
+    color: colors.text,
     marginLeft: 8,
   },
   rewardsValue: {
@@ -349,7 +363,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#1F2937',
+    color: colors.text,
     marginBottom: 16,
   },
   actionCard: {
@@ -387,7 +401,7 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   benefitsList: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.card,
     borderRadius: 16,
     padding: 20,
     elevation: 2,
@@ -403,7 +417,7 @@ const styles = StyleSheet.create({
   },
   benefitText: {
     fontSize: 14,
-    color: '#6B7280',
+    color: colors.textSecondary,
     marginLeft: 12,
     flex: 1,
     lineHeight: 20,

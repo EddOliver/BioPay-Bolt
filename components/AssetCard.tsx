@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useThemeStore } from '@/stores/themeStore';
 
 interface AssetCardProps {
   name: string;
@@ -17,13 +18,22 @@ export default function AssetCard({
   usdValue,
   decimals,
 }: AssetCardProps) {
+  const { isDarkMode } = useThemeStore();
+
   const formatBalance = (balance: number, decimals: number) => {
     return (balance / Math.pow(10, decimals)).toFixed(decimals > 2 ? 2 : decimals);
   };
 
+  const getGradientColors = () => {
+    if (symbol === 'ALGO') {
+      return isDarkMode ? ['#60A5FA', '#3B82F6'] : ['#3B82F6', '#1E40AF'];
+    }
+    return isDarkMode ? ['#34D399', '#10B981'] : ['#10B981', '#059669'];
+  };
+
   return (
     <LinearGradient
-      colors={symbol === 'ALGO' ? ['#3B82F6', '#1E40AF'] : ['#10B981', '#059669']}
+      colors={getGradientColors()}
       style={styles.card}
     >
       <View style={styles.header}>

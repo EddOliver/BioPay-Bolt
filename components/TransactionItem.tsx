@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { ArrowUpRight, ArrowDownLeft } from 'lucide-react-native';
+import { useThemeStore } from '@/stores/themeStore';
 
 interface TransactionItemProps {
   id: string;
@@ -18,6 +19,8 @@ export default function TransactionItem({
   timestamp,
   address,
 }: TransactionItemProps) {
+  const { colors } = useThemeStore();
+
   const formatDate = (date: Date) => {
     const now = new Date();
     const diff = now.getTime() - date.getTime();
@@ -28,16 +31,18 @@ export default function TransactionItem({
     return date.toLocaleDateString();
   };
 
+  const styles = createStyles(colors);
+
   return (
     <View style={styles.container}>
       <View style={[
         styles.iconContainer,
-        { backgroundColor: type === 'sent' ? '#FEF3F2' : '#F0FDF4' }
+        { backgroundColor: type === 'sent' ? colors.error + '20' : colors.success + '20' }
       ]}>
         {type === 'sent' ? (
-          <ArrowUpRight size={20} color="#EF4444" />
+          <ArrowUpRight size={20} color={colors.error} />
         ) : (
-          <ArrowDownLeft size={20} color="#22C55E" />
+          <ArrowDownLeft size={20} color={colors.success} />
         )}
       </View>
 
@@ -48,7 +53,7 @@ export default function TransactionItem({
           </Text>
           <Text style={[
             styles.amount,
-            { color: type === 'sent' ? '#EF4444' : '#22C55E' }
+            { color: type === 'sent' ? colors.error : colors.success }
           ]}>
             {type === 'sent' ? '-' : '+'}{amount} {asset}
           </Text>
@@ -63,11 +68,11 @@ export default function TransactionItem({
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (colors: any) => StyleSheet.create({
   container: {
     flexDirection: 'row',
     padding: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.card,
     borderRadius: 12,
     marginBottom: 8,
     elevation: 2,
@@ -96,7 +101,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1F2937',
+    color: colors.text,
   },
   amount: {
     fontSize: 16,
@@ -109,10 +114,10 @@ const styles = StyleSheet.create({
   },
   address: {
     fontSize: 14,
-    color: '#6B7280',
+    color: colors.textSecondary,
   },
   timestamp: {
     fontSize: 12,
-    color: '#9CA3AF',
+    color: colors.textSecondary,
   },
 });
