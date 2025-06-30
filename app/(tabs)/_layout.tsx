@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import { Platform } from 'react-native';
-import { Chrome as Home, CreditCard, User, Settings } from 'lucide-react-native';
+import { Home, CreditCard, User } from 'lucide-react-native';
 
 export default function TabLayout() {
   return (
@@ -46,15 +46,6 @@ export default function TabLayout() {
           title: 'Identity',
           tabBarIcon: ({ size, color }) => (
             <User size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: 'Settings',
-          tabBarIcon: ({ size, color }) => (
-            <Settings size={size} color={color} />
           ),
         }}
       />

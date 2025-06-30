@@ -9,11 +9,9 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { Wallet, QrCode, User, ArrowRight } from 'lucide-react-native';
 import { router } from 'expo-router';
-import { useThemeStore } from '@/stores/themeStore';
 
 export default function ChargeScreen() {
   const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
-  const { colors, isDarkMode } = useThemeStore();
 
   const paymentMethods = [
     {
@@ -45,12 +43,10 @@ export default function ChargeScreen() {
     router.push(`/payment/${methodId}` as any);
   };
 
-  const styles = createStyles(colors);
-
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={isDarkMode ? ['#1E293B', '#334155'] : ['#667eea', '#764ba2']}
+        colors={['#667eea', '#764ba2']}
         style={styles.header}
       >
         <Text style={styles.title}>Payments</Text>
@@ -131,10 +127,10 @@ export default function ChargeScreen() {
   );
 }
 
-const createStyles = (colors: any) => StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: '#F9FAFB',
   },
   header: {
     paddingTop: 60,
@@ -200,7 +196,7 @@ const createStyles = (colors: any) => StyleSheet.create({
   },
   infoSection: {
     marginTop: 32,
-    backgroundColor: colors.card,
+    backgroundColor: '#FFFFFF',
     borderRadius: 16,
     padding: 20,
     elevation: 2,
@@ -212,7 +208,7 @@ const createStyles = (colors: any) => StyleSheet.create({
   infoTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: colors.text,
+    color: '#1F2937',
     marginBottom: 16,
   },
   featuresList: {
@@ -226,12 +222,12 @@ const createStyles = (colors: any) => StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: colors.primary,
+    backgroundColor: '#3B82F6',
     marginRight: 12,
   },
   featureText: {
     fontSize: 14,
-    color: colors.textSecondary,
+    color: '#6B7280',
     flex: 1,
     lineHeight: 20,
   },

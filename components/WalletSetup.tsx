@@ -11,7 +11,6 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { Plus, Download, Eye, EyeOff, Wallet, Shield } from 'lucide-react-native';
 import { useWalletStore } from '@/stores/walletStore';
-import { useThemeStore } from '@/stores/themeStore';
 
 interface WalletSetupProps {
   onComplete: () => void;
@@ -25,7 +24,6 @@ export default function WalletSetup({ onComplete }: WalletSetupProps) {
   const [isCreating, setIsCreating] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const { createWallet, importWallet } = useWalletStore();
-  const { colors, isDarkMode } = useThemeStore();
 
   const handleCreateWallet = async () => {
     setIsCreating(true);
@@ -71,12 +69,10 @@ export default function WalletSetup({ onComplete }: WalletSetupProps) {
     }
   };
 
-  const styles = createStyles(colors);
-
   if (mode === 'import') {
     return (
       <LinearGradient
-        colors={isDarkMode ? ['#1E293B', '#334155'] : ['#667eea', '#764ba2']}
+        colors={['#667eea', '#764ba2']}
         style={styles.container}
       >
         <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -135,7 +131,7 @@ export default function WalletSetup({ onComplete }: WalletSetupProps) {
 
   return (
     <LinearGradient
-      colors={isDarkMode ? ['#1E293B', '#334155'] : ['#667eea', '#764ba2']}
+      colors={['#667eea', '#764ba2']}
       style={styles.container}
     >
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -204,7 +200,7 @@ export default function WalletSetup({ onComplete }: WalletSetupProps) {
   );
 }
 
-const createStyles = (colors: any) => StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
   },

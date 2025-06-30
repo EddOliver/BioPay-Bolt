@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { ArrowUpRight, ArrowDownLeft } from 'lucide-react-native';
-import { useThemeStore } from '@/stores/themeStore';
 
 interface TransactionItemProps {
   id: string;
@@ -19,8 +18,6 @@ export default function TransactionItem({
   timestamp,
   address,
 }: TransactionItemProps) {
-  const { colors } = useThemeStore();
-
   const formatDate = (date: Date) => {
     const now = new Date();
     const diff = now.getTime() - date.getTime();
@@ -31,18 +28,16 @@ export default function TransactionItem({
     return date.toLocaleDateString();
   };
 
-  const styles = createStyles(colors);
-
   return (
     <View style={styles.container}>
       <View style={[
         styles.iconContainer,
-        { backgroundColor: type === 'sent' ? colors.error + '20' : colors.success + '20' }
+        { backgroundColor: type === 'sent' ? '#FEF3F2' : '#F0FDF4' }
       ]}>
         {type === 'sent' ? (
-          <ArrowUpRight size={20} color={colors.error} />
+          <ArrowUpRight size={20} color="#EF4444" />
         ) : (
-          <ArrowDownLeft size={20} color={colors.success} />
+          <ArrowDownLeft size={20} color="#22C55E" />
         )}
       </View>
 
@@ -53,7 +48,7 @@ export default function TransactionItem({
           </Text>
           <Text style={[
             styles.amount,
-            { color: type === 'sent' ? colors.error : colors.success }
+            { color: type === 'sent' ? '#EF4444' : '#22C55E' }
           ]}>
             {type === 'sent' ? '-' : '+'}{amount} {asset}
           </Text>
@@ -68,11 +63,11 @@ export default function TransactionItem({
   );
 }
 
-const createStyles = (colors: any) => StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     padding: 16,
-    backgroundColor: colors.card,
+    backgroundColor: '#FFFFFF',
     borderRadius: 12,
     marginBottom: 8,
     elevation: 2,
@@ -101,7 +96,7 @@ const createStyles = (colors: any) => StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.text,
+    color: '#1F2937',
   },
   amount: {
     fontSize: 16,
@@ -114,10 +109,10 @@ const createStyles = (colors: any) => StyleSheet.create({
   },
   address: {
     fontSize: 14,
-    color: colors.textSecondary,
+    color: '#6B7280',
   },
   timestamp: {
     fontSize: 12,
-    color: colors.textSecondary,
+    color: '#9CA3AF',
   },
 });

@@ -10,7 +10,6 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { Send, Download, RefreshCw } from 'lucide-react-native';
 import { useWalletStore } from '@/stores/walletStore';
-import { useThemeStore } from '@/stores/themeStore';
 import WalletSetup from '@/components/WalletSetup';
 import AssetCard from '@/components/AssetCard';
 import TransactionItem from '@/components/TransactionItem';
@@ -25,8 +24,6 @@ export default function HomeScreen() {
     refreshBalance,
   } = useWalletStore();
 
-  const { colors, isDarkMode } = useThemeStore();
-
   const [refreshing, setRefreshing] = React.useState(false);
 
   const onRefresh = React.useCallback(async () => {
@@ -34,8 +31,6 @@ export default function HomeScreen() {
     await refreshBalance();
     setRefreshing(false);
   }, [refreshBalance]);
-
-  const styles = createStyles(colors);
 
   if (!isConnected) {
     return <WalletSetup onComplete={() => {}} />;
@@ -53,7 +48,7 @@ export default function HomeScreen() {
       >
         {/* Header Section */}
         <LinearGradient
-          colors={isDarkMode ? ['#1E293B', '#334155'] : ['#667eea', '#764ba2']}
+          colors={['#667eea', '#764ba2']}
           style={styles.header}
         >
           <Text style={styles.greeting}>Welcome back</Text>
@@ -173,10 +168,10 @@ export default function HomeScreen() {
   );
 }
 
-const createStyles = (colors: any) => StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: '#F9FAFB',
   },
   scrollView: {
     flex: 1,
@@ -241,7 +236,7 @@ const createStyles = (colors: any) => StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: colors.text,
+    color: '#1F2937',
     marginBottom: 16,
   },
   assetsScroll: {
@@ -259,7 +254,7 @@ const createStyles = (colors: any) => StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    backgroundColor: colors.card,
+    backgroundColor: '#FFFFFF',
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
@@ -272,16 +267,16 @@ const createStyles = (colors: any) => StyleSheet.create({
   statValue: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: colors.primary,
+    color: '#3B82F6',
     marginBottom: 4,
   },
   statLabel: {
     fontSize: 12,
-    color: colors.textSecondary,
+    color: '#6B7280',
     textAlign: 'center',
   },
   networkCard: {
-    backgroundColor: colors.card,
+    backgroundColor: '#FFFFFF',
     borderRadius: 16,
     padding: 20,
     elevation: 2,
@@ -293,7 +288,7 @@ const createStyles = (colors: any) => StyleSheet.create({
   networkTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.text,
+    color: '#1F2937',
     marginBottom: 12,
   },
   networkInfo: {
@@ -306,11 +301,11 @@ const createStyles = (colors: any) => StyleSheet.create({
   },
   networkLabel: {
     fontSize: 14,
-    color: colors.textSecondary,
+    color: '#6B7280',
   },
   networkValue: {
     fontSize: 14,
     fontWeight: '600',
-    color: colors.text,
+    color: '#1F2937',
   },
 });
