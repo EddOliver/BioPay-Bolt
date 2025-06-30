@@ -8,7 +8,6 @@ interface IdentityState {
   faceId: string | null;
   
   // Actions
-  startVerification: () => Promise<void>;
   completeFaceVerification: () => Promise<void>;
   claimRewards: (amount: number) => Promise<void>;
 }
@@ -20,16 +19,8 @@ export const useIdentityStore = create<IdentityState>((set, get) => ({
   verificationLevel: 'none',
   faceId: null,
 
-  startVerification: async () => {
-    // Mock verification process
-    set({
-      verificationLevel: 'basic',
-      trustScore: 25,
-    });
-  },
-
   completeFaceVerification: async () => {
-    // Mock face verification
+    // Mock face verification process that handles both start and completion
     set({
       isVerified: true,
       verificationLevel: 'enhanced',
