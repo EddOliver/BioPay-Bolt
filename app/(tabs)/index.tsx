@@ -56,12 +56,12 @@ export default function HomeScreen() {
           <View style={styles.badgeContainer}>
             <View style={styles.badgeRow}>
               <Image
-                source={{ uri: 'https://raw.githubusercontent.com/kickiniteasy/bolt-hackathon-badge/main/black-circle-badge.png' }}
+                source={{ uri: 'https://raw.githubusercontent.com/kickiniteasy/bolt-hackathon-badge/refs/heads/main/black-circle-badge.png' }}
                 style={styles.hackathonBadge}
                 resizeMode="contain"
               />
               <Image
-                source={{ uri: 'https://raw.githubusercontent.com/kickiniteasy/bolt-hackathon-badge/main/algorand-logo.png' }}
+                source={{ uri: 'https://raw.githubusercontent.com/kickiniteasy/bolt-hackathon-badge/refs/heads/main/algorand-logo.png' }}
                 style={styles.algorandLogo}
                 resizeMode="contain"
               />
@@ -205,6 +205,10 @@ const styles = StyleSheet.create({
   badgeContainer: {
     alignItems: 'center',
     marginBottom: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
   },
   badgeRow: {
     flexDirection: 'row',
@@ -214,18 +218,21 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   hackathonBadge: {
-    width: 48,
-    height: 48,
+    width: 56,
+    height: 56,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 28,
   },
   algorandLogo: {
-    width: 120,
-    height: 32,
+    width: 140,
+    height: 36,
   },
   badgeText: {
-    fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.8)',
-    fontWeight: '500',
+    fontSize: 13,
+    color: 'rgba(255, 255, 255, 0.9)',
+    fontWeight: '600',
     textAlign: 'center',
+    letterSpacing: 0.5,
   },
   greeting: {
     fontSize: 16,
