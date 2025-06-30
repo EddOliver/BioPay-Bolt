@@ -56,14 +56,16 @@ export default function HomeScreen() {
           <View style={styles.badgeContainer}>
             <View style={styles.badgeRow}>
               <Image
-                source={{ uri: 'https://raw.githubusercontent.com/kickiniteasy/bolt-hackathon-badge/refs/heads/main/black-circle-badge.png' }}
+                source={{ uri: 'https://github.com/kickiniteasy/bolt-hackathon-badge/blob/main/black-circle-badge.png?raw=true' }}
                 style={styles.hackathonBadge}
                 resizeMode="contain"
+                onError={(error) => console.log('Badge image failed to load:', error.nativeEvent.error)}
               />
               <Image
-                source={{ uri: 'https://raw.githubusercontent.com/kickiniteasy/bolt-hackathon-badge/refs/heads/main/algorand-logo.png' }}
+                source={{ uri: 'https://github.com/kickiniteasy/bolt-hackathon-badge/blob/main/algorand-logo.png?raw=true' }}
                 style={styles.algorandLogo}
                 resizeMode="contain"
+                onError={(error) => console.log('Logo image failed to load:', error.nativeEvent.error)}
               />
             </View>
             <Text style={styles.badgeText}>Powered by Algorand • Bolt Hackathon</Text>
@@ -205,34 +207,41 @@ const styles = StyleSheet.create({
   badgeContainer: {
     alignItems: 'center',
     marginBottom: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 16,
-    paddingVertical: 16,
-    paddingHorizontal: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 24,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
   },
   badgeRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 8,
-    gap: 16,
+    marginBottom: 12,
+    gap: 20,
   },
   hackathonBadge: {
-    width: 56,
-    height: 56,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 28,
+    width: 64,
+    height: 64,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 32,
+    padding: 4,
   },
   algorandLogo: {
-    width: 140,
-    height: 36,
+    width: 160,
+    height: 40,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 8,
+    paddingHorizontal: 8,
   },
   badgeText: {
-    fontSize: 13,
-    color: 'rgba(255, 255, 255, 0.9)',
+    fontSize: 14,
+    color: 'rgba(255, 255, 255, 0.95)',
     fontWeight: '600',
     textAlign: 'center',
-    letterSpacing: 0.5,
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
   },
   greeting: {
     fontSize: 16,
