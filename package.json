@@ -11,6 +11,7 @@
     "ios": "expo run:ios"
   },
   "dependencies": {
+    "@agoralabs-sh/avm-web-provider": "^1.7.0",
     "@algorandfoundation/algokit-utils": "^9.0.1",
     "@blockshake/defly-connect": "^1.0.6",
     "@expo/vector-icons": "^14.1.0",
