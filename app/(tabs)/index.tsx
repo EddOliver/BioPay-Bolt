@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   RefreshControl,
+  Image,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Send, Download, RefreshCw } from 'lucide-react-native';
@@ -51,6 +52,23 @@ export default function HomeScreen() {
           colors={['#667eea', '#764ba2']}
           style={styles.header}
         >
+          {/* Badge and Logo Section */}
+          <View style={styles.badgeContainer}>
+            <View style={styles.badgeRow}>
+              <Image
+                source={{ uri: 'https://raw.githubusercontent.com/kickiniteasy/bolt-hackathon-badge/main/black-circle-badge.png' }}
+                style={styles.hackathonBadge}
+                resizeMode="contain"
+              />
+              <Image
+                source={{ uri: 'https://raw.githubusercontent.com/kickiniteasy/bolt-hackathon-badge/main/algorand-logo.png' }}
+                style={styles.algorandLogo}
+                resizeMode="contain"
+              />
+            </View>
+            <Text style={styles.badgeText}>Powered by Algorand • Bolt Hackathon</Text>
+          </View>
+
           <Text style={styles.greeting}>Welcome back</Text>
           <Text style={styles.address}>
             {typeof address === 'string' ? `${address.slice(0, 6)}...${address.slice(-6)}` : ''}
@@ -183,6 +201,31 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingBottom: 24,
     paddingHorizontal: 24,
+  },
+  badgeContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  badgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+    gap: 16,
+  },
+  hackathonBadge: {
+    width: 48,
+    height: 48,
+  },
+  algorandLogo: {
+    width: 120,
+    height: 32,
+  },
+  badgeText: {
+    fontSize: 12,
+    color: 'rgba(255, 255, 255, 0.8)',
+    fontWeight: '500',
+    textAlign: 'center',
   },
   greeting: {
     fontSize: 16,
