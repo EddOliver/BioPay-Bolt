@@ -25,14 +25,24 @@ export default function IdentityScreen() {
     trustScore,
     rewardPoints,
     verificationLevel,
+    startVerification,
     completeFaceVerification,
     claimRewards,
   } = useIdentityStore();
 
+  const handleStartVerification = async () => {
+    try {
+      await startVerification();
+      Alert.alert('Success', 'Basic verification started!');
+    } catch (error) {
+      Alert.alert('Error', 'Failed to start verification');
+    }
+  };
+
   const handleFaceVerification = async () => {
     try {
       await completeFaceVerification();
-      Alert.alert('Success', 'Face verification completed! You earned 100 reward points and your identity is now verified.');
+      Alert.alert('Success', 'Face verification completed! You earned 100 reward points.');
     } catch (error) {
       Alert.alert('Error', 'Face verification failed');
     }
@@ -172,23 +182,26 @@ export default function IdentityScreen() {
             </TouchableOpacity>
           )}
 
-          {isVerified && (
-            <View style={styles.verifiedCard}>
+          {verificationLevel === 'none' && (
+            <TouchableOpacity
+              style={styles.actionCard}
+              onPress={handleStartVerification}
+            >
               <LinearGradient
-                colors={['#10B981', '#059669']}
-                style={styles.verifiedGradient}
+                colors={['#3B82F6', '#1E40AF']}
+                style={styles.actionGradient}
               >
-                <CheckCircle size={32} color="#FFFFFF" />
+                <Shield size={32} color="#FFFFFF" />
                 <View style={styles.actionText}>
                   <Text style={styles.actionTitle}>
-                    Verification Complete
+                    Start Verification
                   </Text>
                   <Text style={styles.actionDescription}>
-                    Your identity has been successfully verified
+                    Begin your identity verification journey
                   </Text>
                 </View>
               </LinearGradient>
-            </View>
+            </TouchableOpacity>
           )}
         </View>
 
@@ -389,22 +402,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 8,
   },
-  verifiedCard: {
-    borderRadius: 16,
-    overflow: 'hidden',
-    marginBottom: 16,
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-  },
   actionGradient: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 20,
-  },
-  verifiedGradient: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 20,
