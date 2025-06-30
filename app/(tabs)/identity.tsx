@@ -25,19 +25,9 @@ export default function IdentityScreen() {
     trustScore,
     rewardPoints,
     verificationLevel,
-    startVerification,
     completeFaceVerification,
     claimRewards,
   } = useIdentityStore();
-
-  const handleStartVerification = async () => {
-    try {
-      await startVerification();
-      Alert.alert('Success', 'Basic verification started!');
-    } catch (error) {
-      Alert.alert('Error', 'Failed to start verification');
-    }
-  };
 
   const handleFaceVerification = async () => {
     try {
@@ -176,28 +166,6 @@ export default function IdentityScreen() {
                   </Text>
                   <Text style={styles.actionDescription}>
                     Complete biometric verification and earn 100 points
-                  </Text>
-                </View>
-              </LinearGradient>
-            </TouchableOpacity>
-          )}
-
-          {verificationLevel === 'none' && (
-            <TouchableOpacity
-              style={styles.actionCard}
-              onPress={handleStartVerification}
-            >
-              <LinearGradient
-                colors={['#3B82F6', '#1E40AF']}
-                style={styles.actionGradient}
-              >
-                <Shield size={32} color="#FFFFFF" />
-                <View style={styles.actionText}>
-                  <Text style={styles.actionTitle}>
-                    Start Verification
-                  </Text>
-                  <Text style={styles.actionDescription}>
-                    Begin your identity verification journey
                   </Text>
                 </View>
               </LinearGradient>
