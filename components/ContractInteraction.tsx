@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useWallet } from '@txnlab/use-wallet-react';
-import { Code, Play, AlertCircle, CheckCircle } from 'lucide-react-native';
+import { Code, Play, CircleAlert as AlertCircle, CircleCheck as CheckCircle } from 'lucide-react-native';
 import { SmartContract, ContractMethod } from '@/types/algorand';
 
 interface ContractInteractionProps {

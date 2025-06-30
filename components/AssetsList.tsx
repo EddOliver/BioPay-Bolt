@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useWallet } from '@txnlab/use-wallet-react';
 import { getAlgodConfigFromViteEnvironment } from '@algorandfoundation/algokit-utils';
-import { Coins, TrendingUp, AlertCircle } from 'lucide-react-native';
+import { Coins, TrendingUp, CircleAlert as AlertCircle } from 'lucide-react-native';
 import { AssetInfo } from '@/types/algorand';
 
 interface AssetsListProps {

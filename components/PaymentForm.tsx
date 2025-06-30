@@ -11,7 +11,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { useWallet } from '@txnlab/use-wallet-react';
 import { AlgoAmount } from '@algorandfoundation/algokit-utils';
-import { Send, AlertCircle, CheckCircle } from 'lucide-react-native';
+import { Send, CircleAlert as AlertCircle, CircleCheck as CheckCircle } from 'lucide-react-native';
 import { TransactionResult } from '@/types/algorand';
 
 interface PaymentFormProps {
