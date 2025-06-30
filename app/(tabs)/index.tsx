@@ -56,16 +56,16 @@ export default function HomeScreen() {
           <View style={styles.badgeContainer}>
             <View style={styles.badgeRow}>
               <Image
-                source={{ uri: 'https://github.com/kickiniteasy/bolt-hackathon-badge/blob/main/black-circle-badge.png?raw=true' }}
+                source={{ uri: 'https://github.com/kickiniteasy/bolt-hackathon-badge/blob/main/src/public/bolt-badge/white_circle_360x360/white_circle_360x360.png?raw=true' }}
                 style={styles.hackathonBadge}
                 resizeMode="contain"
-                onError={(error) => console.log('Badge image failed to load:', error.nativeEvent.error)}
+                onError={(error) => console.log('Bolt badge failed to load:', error.nativeEvent.error)}
               />
               <Image
-                source={{ uri: 'https://github.com/kickiniteasy/bolt-hackathon-badge/blob/main/algorand-logo.png?raw=true' }}
+                source={{ uri: 'https://raw.githubusercontent.com/kickiniteasy/bolt-hackathon-badge/3f09b71855feb7d3c02ed170ccae764b842cf4ce/src/public/algorand/wordmark-color.svg' }}
                 style={styles.algorandLogo}
                 resizeMode="contain"
-                onError={(error) => console.log('Logo image failed to load:', error.nativeEvent.error)}
+                onError={(error) => console.log('Algorand logo failed to load:', error.nativeEvent.error)}
               />
             </View>
             <Text style={styles.badgeText}>Powered by Algorand • Bolt Hackathon</Text>
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
   algorandLogo: {
     width: 160,
     height: 40,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: 8,
     paddingHorizontal: 8,
   },

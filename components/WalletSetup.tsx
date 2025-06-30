@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Alert,
   ScrollView,
+  Image,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Plus, Download, Eye, EyeOff, Wallet, Shield } from 'lucide-react-native';
@@ -137,6 +138,25 @@ export default function WalletSetup({ onComplete }: WalletSetupProps) {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.content}>
           <View style={styles.headerSection}>
+            {/* Badge and Logo Section */}
+            <View style={styles.badgeContainer}>
+              <View style={styles.badgeRow}>
+                <Image
+                  source={{ uri: 'https://github.com/kickiniteasy/bolt-hackathon-badge/blob/main/src/public/bolt-badge/white_circle_360x360/white_circle_360x360.png?raw=true' }}
+                  style={styles.hackathonBadge}
+                  resizeMode="contain"
+                  onError={(error) => console.log('Bolt badge failed to load:', error.nativeEvent.error)}
+                />
+                <Image
+                  source={{ uri: 'https://raw.githubusercontent.com/kickiniteasy/bolt-hackathon-badge/3f09b71855feb7d3c02ed170ccae764b842cf4ce/src/public/algorand/wordmark-color.svg' }}
+                  style={styles.algorandLogo}
+                  resizeMode="contain"
+                  onError={(error) => console.log('Algorand logo failed to load:', error.nativeEvent.error)}
+                />
+              </View>
+              <Text style={styles.badgeText}>Powered by Algorand • Bolt Hackathon</Text>
+            </View>
+
             <View style={styles.logoContainer}>
               <Wallet size={48} color="#FFFFFF" />
             </View>
@@ -217,6 +237,45 @@ const styles = StyleSheet.create({
   headerSection: {
     alignItems: 'center',
     marginBottom: 48,
+  },
+  badgeContainer: {
+    alignItems: 'center',
+    marginBottom: 32,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 24,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  badgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+    gap: 20,
+  },
+  hackathonBadge: {
+    width: 64,
+    height: 64,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 32,
+    padding: 4,
+  },
+  algorandLogo: {
+    width: 160,
+    height: 40,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+  },
+  badgeText: {
+    fontSize: 14,
+    color: 'rgba(255, 255, 255, 0.95)',
+    fontWeight: '600',
+    textAlign: 'center',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
   },
   logoContainer: {
     width: 80,
