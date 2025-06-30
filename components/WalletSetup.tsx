@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Plus, Download, Eye, EyeOff, Wallet, Shield } from 'lucide-react-native';
+import * as WebBrowser from 'expo-web-browser';
 import { useWalletStore } from '@/stores/walletStore';
 
 interface WalletSetupProps {
@@ -25,6 +26,14 @@ export default function WalletSetup({ onComplete }: WalletSetupProps) {
   const [isCreating, setIsCreating] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const { createWallet, importWallet } = useWalletStore();
+
+  const handleBoltBadgePress = async () => {
+    try {
+      await WebBrowser.openBrowserAsync('https://bolt.new/');
+    } catch (error) {
+      console.log('Error opening Bolt website:', error);
+    }
+  };
 
   const handleCreateWallet = async () => {
     setIsCreating(true);
@@ -141,12 +150,18 @@ export default function WalletSetup({ onComplete }: WalletSetupProps) {
             {/* Badge and Logo Section */}
             <View style={styles.badgeContainer}>
               <View style={styles.badgeRow}>
-                <Image
-                  source={{ uri: 'https://github.com/kickiniteasy/bolt-hackathon-badge/blob/main/src/public/bolt-badge/white_circle_360x360/white_circle_360x360.png?raw=true' }}
-                  style={styles.hackathonBadge}
-                  resizeMode="contain"
-                  onError={(error) => console.log('Bolt badge failed to load:', error.nativeEvent.error)}
-                />
+                <TouchableOpacity 
+                  style={styles.boltBadgeButton}
+                  onPress={handleBoltBadgePress}
+                  activeOpacity={0.8}
+                >
+                  <Image
+                    source={{ uri: 'https://github.com/kickiniteasy/bolt-hackathon-badge/blob/main/src/public/bolt-badge/white_circle_360x360/white_circle_360x360.png?raw=true' }}
+                    style={styles.hackathonBadge}
+                    resizeMode="contain"
+                    onError={(error) => console.log('Bolt badge failed to load:', error.nativeEvent.error)}
+                  />
+                </TouchableOpacity>
                 <Image
                   source={{ uri: 'https://raw.githubusercontent.com/kickiniteasy/bolt-hackathon-badge/3f09b71855feb7d3c02ed170ccae764b842cf4ce/src/public/algorand/wordmark-color.svg' }}
                   style={styles.algorandLogo}
@@ -254,6 +269,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 12,
     gap: 20,
+  },
+  boltBadgeButton: {
+    borderRadius: 32,
+    overflow: 'hidden',
   },
   hackathonBadge: {
     width: 64,
