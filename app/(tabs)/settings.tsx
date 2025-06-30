@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function HomeScreen() {
+export default function SettingsScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to Expo Router</Text>
+      <Text style={styles.title}>Settings</Text>
       <Text style={styles.subtitle}>
-        This is a minimal Expo Router app with tabs
+        Configure your app preferences here
       </Text>
     </View>
   );

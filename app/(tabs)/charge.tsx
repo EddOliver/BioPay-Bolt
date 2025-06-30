@@ -7,96 +7,51 @@ import {
   ScrollView,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Wallet, QrCode, User, ArrowRight } from 'lucide-react-native';
-import { router } from 'expo-router';
+import { useWallet } from '@txnlab/use-wallet-react';
+import { Wallet, Send, Code, ArrowRight } from 'lucide-react-native';
+import { DEFAULT_NETWORK } from '@/config/algorand';
+import WalletConnector from '@/components/WalletConnector';
+import NetworkSwitcher from '@/components/NetworkSwitcher';
+import PaymentForm from '@/components/PaymentForm';
+import ContractInteraction from '@/components/ContractInteraction';
+
+type TabType = 'payment' | 'contract';
 
 export default function ChargeScreen() {
-  const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
+  const { activeAccount } = useWallet();
+  const [activeTab, setActiveTab] = useState<TabType>('payment');
+  const [currentNetwork, setCurrentNetwork] = useState(DEFAULT_NETWORK);
 
-  const paymentMethods = [
-    {
-      id: 'address',
-      title: 'Address Payment',
-      description: 'Send payment to an Algorand address',
-      icon: Wallet,
-      gradient: ['#3B82F6', '#1E40AF'],
-    },
-    {
-      id: 'qr',
-      title: 'QR Payment',
-      description: 'Scan a QR code to pay instantly',
-      icon: QrCode,
-      gradient: ['#10B981', '#059669'],
-    },
-    {
-      id: 'face',
-      title: 'Face ID Request',
-      description: 'Request payment using Face ID authentication',
-      icon: User,
-      gradient: ['#8B5CF6', '#7C3AED'],
-    },
-  ];
+  if (!activeAccount) {
+    return (
+      <View style={styles.container}>
+        <LinearGradient
+          colors={['#667eea', '#764ba2']}
+          style={styles.header}
+        >
+          <Text style={styles.title}>Payments & Contracts</Text>
+          <Text style={styles.subtitle}>
+            Send payments and interact with smart contracts
+          </Text>
+        </LinearGradient>
 
-  const handleMethodSelect = (methodId: string) => {
-    setSelectedMethod(methodId);
-    // Navigate to specific payment screen
-    router.push(`/payment/${methodId}` as any);
-  };
-
-  return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={['#667eea', '#764ba2']}
-        style={styles.header}
-      >
-        <Text style={styles.title}>Payments</Text>
-        <Text style={styles.subtitle}>
-          Send payments or request funds
-        </Text>
-      </LinearGradient>
-
-      <ScrollView style={styles.content}>
-        <View style={styles.methodsContainer}>
-          {paymentMethods.map((method) => {
-            const IconComponent = method.icon;
-            return (
-              <TouchableOpacity
-                key={method.id}
-                style={styles.methodCard}
-                onPress={() => handleMethodSelect(method.id)}
-              >
-                <LinearGradient
-                  colors={method.gradient}
-                  style={styles.methodGradient}
-                >
-                  <View style={styles.methodContent}>
-                    <View style={styles.methodIcon}>
-                      <IconComponent size={32} color="#FFFFFF" />
-                    </View>
-                    
-                    <View style={styles.methodText}>
-                      <Text style={styles.methodTitle}>{method.title}</Text>
-                      <Text style={styles.methodDescription}>
-                        {method.description}
-                      </Text>
-                    </View>
-                    
-                    <ArrowRight size={24} color="rgba(255, 255, 255, 0.7)" />
-                  </View>
-                </LinearGradient>
-              </TouchableOpacity>
-            );
-          })}
+        <View style={styles.connectSection}>
+          <Wallet size={64} color="#9CA3AF" />
+          <Text style={styles.connectTitle}>Connect Your Wallet</Text>
+          <Text style={styles.connectDescription}>
+            Connect your Algorand wallet to send payments and interact with smart contracts on the blockchain.
+          </Text>
+          <WalletConnector onConnect={() => {}} />
         </View>
 
         <View style={styles.infoSection}>
-          <Text style={styles.infoTitle}>Payment Features</Text>
+          <Text style={styles.infoTitle}>What You Can Do</Text>
           
           <View style={styles.featuresList}>
             <View style={styles.featureItem}>
               <View style={styles.featureDot} />
               <Text style={styles.featureText}>
-                Instant settlement on Algorand blockchain
+                Send ALGO to any Algorand address instantly
               </Text>
             </View>
             
@@ -110,17 +65,85 @@ export default function ChargeScreen() {
             <View style={styles.featureItem}>
               <View style={styles.featureDot} />
               <Text style={styles.featureText}>
-                AI-powered Face ID for secure payment requests
+                Interact with Algorand smart contracts
               </Text>
             </View>
             
             <View style={styles.featureItem}>
               <View style={styles.featureDot} />
               <Text style={styles.featureText}>
-                Support for ALGO, USDC, and other ASAs
+                Support for MainNet and TestNet
               </Text>
             </View>
           </View>
+        </View>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <LinearGradient
+        colors={['#667eea', '#764ba2']}
+        style={styles.header}
+      >
+        <View style={styles.headerTop}>
+          <View>
+            <Text style={styles.title}>Payments & Contracts</Text>
+            <Text style={styles.subtitle}>
+              Send payments and interact with smart contracts
+            </Text>
+          </View>
+          <NetworkSwitcher
+            currentNetwork={currentNetwork}
+            onNetworkChange={setCurrentNetwork}
+          />
+        </View>
+
+        <View style={styles.tabContainer}>
+          <TouchableOpacity
+            style={[
+              styles.tab,
+              activeTab === 'payment' && styles.activeTab
+            ]}
+            onPress={() => setActiveTab('payment')}
+          >
+            <Send size={20} color={activeTab === 'payment' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)'} />
+            <Text style={[
+              styles.tabText,
+              activeTab === 'payment' && styles.activeTabText
+            ]}>
+              Send Payment
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.tab,
+              activeTab === 'contract' && styles.activeTab
+            ]}
+            onPress={() => setActiveTab('contract')}
+          >
+            <Code size={20} color={activeTab === 'contract' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.7)'} />
+            <Text style={[
+              styles.tabText,
+              activeTab === 'contract' && styles.activeTabText
+            ]}>
+              Smart Contract
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </LinearGradient>
+
+      <ScrollView style={styles.content}>
+        <View style={styles.contentContainer}>
+          {activeTab === 'payment' ? (
+            <PaymentForm onTransactionComplete={(result) => {
+              console.log('Transaction completed:', result);
+            }} />
+          ) : (
+            <ContractInteraction network={currentNetwork} />
+          )}
         </View>
       </ScrollView>
     </View>
@@ -137,6 +160,12 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
     paddingHorizontal: 24,
   },
+  headerTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 24,
+  },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
@@ -147,56 +176,62 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'rgba(255, 255, 255, 0.8)',
   },
-  content: {
+  tabContainer: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 12,
+    padding: 4,
+  },
+  tab: {
     flex: 1,
-    paddingHorizontal: 24,
-  },
-  methodsContainer: {
-    marginTop: 24,
-    gap: 16,
-  },
-  methodCard: {
-    borderRadius: 16,
-    overflow: 'hidden',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-  },
-  methodGradient: {
-    padding: 20,
-  },
-  methodContent: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  methodIcon: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    gap: 8,
   },
-  methodText: {
+  activeTab: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  tabText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: 'rgba(255, 255, 255, 0.7)',
+  },
+  activeTabText: {
+    color: '#FFFFFF',
+  },
+  content: {
     flex: 1,
   },
-  methodTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    marginBottom: 4,
+  contentContainer: {
+    padding: 24,
   },
-  methodDescription: {
-    fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.8)',
-    lineHeight: 20,
+  connectSection: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  connectTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#1F2937',
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  connectDescription: {
+    fontSize: 16,
+    color: '#6B7280',
+    textAlign: 'center',
+    lineHeight: 24,
+    marginBottom: 24,
   },
   infoSection: {
-    marginTop: 32,
     backgroundColor: '#FFFFFF',
+    margin: 24,
     borderRadius: 16,
     padding: 20,
     elevation: 2,
