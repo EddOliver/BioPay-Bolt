@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -12,20 +12,36 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { Plus, Download, Eye, EyeOff, Wallet, Shield } from 'lucide-react-native';
 import * as WebBrowser from 'expo-web-browser';
-import { useWalletStore } from '@/stores/walletStore';
+import ContextModule from '@/provider/contextModule';
+import algosdk from 'algosdk';
+import { setEncryptedStorageValue, setAsyncStorageValue, getAsyncStorageValue } from '@/utils/utils';
+import { fetch } from 'expo/fetch';
 
 interface WalletSetupProps {
   onComplete: () => void;
 }
 
+function arrayToString(arr) {
+  return btoa(String.fromCharCode.apply(null, arr));
+}
+
 export default function WalletSetup({ onComplete }: WalletSetupProps) {
   const [mode, setMode] = useState<'select' | 'import' | 'create'>('select');
   const [mnemonic, setMnemonic] = useState('');
-  const [showMnemonic, setShowMnemonic] = useState(false);
-  const [generatedMnemonic, setGeneratedMnemonic] = useState('');
   const [isCreating, setIsCreating] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
-  const { createWallet, importWallet } = useWalletStore();
+  const context = useContext(ContextModule);
+
+  const checkMemory = async () => {
+    const address = await getAsyncStorageValue('address');
+    if (address !== null) {
+      context.setValue({ address });
+    }
+  };
+
+  useEffect(() => {
+    checkMemory();
+  }, []);
 
   const handleBoltBadgePress = async () => {
     try {
@@ -33,6 +49,21 @@ export default function WalletSetup({ onComplete }: WalletSetupProps) {
     } catch (error) {
       console.log('Error opening Bolt website:', error);
     }
+  };
+
+  const generateWallet = async () => {
+    const response = await fetch("https://algorand-generator-464956242067.europe-west1.run.app");
+    const { result: mnemonic } = await response.json();
+    return mnemonic
+  };
+
+  const createWallet = async () => {
+    const mnemonic = await generateWallet();
+    console.log(mnemonic);
+    const account = algosdk.mnemonicToSecretKey(mnemonic);
+    await setEncryptedStorageValue({ 'privateKey': arrayToString(account.sk) });
+    await setAsyncStorageValue({ 'address': algosdk.encodeAddress(account.addr.publicKey) });
+    context.setValue({ address: algosdk.encodeAddress(account.addr.publicKey) });
   };
 
   const handleCreateWallet = async () => {
@@ -150,7 +181,7 @@ export default function WalletSetup({ onComplete }: WalletSetupProps) {
             {/* Badge and Logo Section */}
             <View style={styles.badgeContainer}>
               <View style={styles.badgeRow}>
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={styles.boltBadgeButton}
                   onPress={handleBoltBadgePress}
                   activeOpacity={0.8}

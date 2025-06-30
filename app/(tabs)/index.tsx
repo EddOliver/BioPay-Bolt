@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,14 +7,21 @@ import {
   TouchableOpacity,
   RefreshControl,
   Image,
+  Dimensions,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Send, Download, RefreshCw } from 'lucide-react-native';
+import { Send, Download, RefreshCw, ArrowLeft, Copy } from 'lucide-react-native';
 import * as WebBrowser from 'expo-web-browser';
 import { useWalletStore } from '@/stores/walletStore';
 import WalletSetup from '@/components/WalletSetup';
 import AssetCard from '@/components/AssetCard';
 import TransactionItem from '@/components/TransactionItem';
+import ContextModule from '@/provider/contextModule';
+import QRCode from "react-native-qrcode-svg";
+import * as Clipboard from 'expo-clipboard';
+import algo from '@/assets/images/algo.png';
+import bolt from '@/assets/images/bolt.png';
+import algosdk from 'algosdk';
 
 export default function HomeScreen() {
   const {
@@ -22,9 +29,13 @@ export default function HomeScreen() {
     address,
     assets,
     transactions,
-    totalUsdValue,
     refreshBalance,
   } = useWalletStore();
+
+  const [receive, setReceive] = React.useState(false);
+  const [totalUsdValue, setTotalUsdValue] = React.useState(0);
+
+  const context = React.useContext(ContextModule);
 
   const [refreshing, setRefreshing] = React.useState(false);
 
@@ -42,9 +53,102 @@ export default function HomeScreen() {
     }
   };
 
-  if (!isConnected) {
-    return <WalletSetup onComplete={() => {}} />;
+  if (context.value.address === "") {
+    return <WalletSetup onComplete={() => { }} />;
   }
+
+  const copyToClipboard = async () => {
+    await Clipboard.setStringAsync(context.value.address);
+  };
+
+  if (receive) {
+    return (
+      <View style={styles.container}>
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Header Section */}
+          <LinearGradient
+            colors={['#667eea', '#764ba2']}
+            style={styles.header}
+          >
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => setReceive(false)}
+            >
+              <ArrowLeft size={24} color="#FFFFFF" />
+            </TouchableOpacity>
+            <View style={styles.badgeContainer}>
+              <View style={styles.badgeRow}>
+                <TouchableOpacity
+                  style={styles.boltBadgeButton}
+                  onPress={handleBoltBadgePress}
+                  activeOpacity={0.8}
+                >
+                  <Image
+                    source={bolt}
+                    style={styles.hackathonBadge}
+                    resizeMode="contain"
+                    onError={(error) => console.log('Bolt badge failed to load:', error.nativeEvent.error)}
+                  />
+                </TouchableOpacity>
+                <Image
+                  source={algo}
+                  style={styles.algorandLogo}
+                  resizeMode="contain"
+                  onError={(error) => console.log('Algorand logo failed to load:', error.nativeEvent.error)}
+                />
+              </View>
+              <Text style={styles.badgeText}>Powered by Algorand • Bolt Hackathon</Text>
+            </View>
+          </LinearGradient>
+
+          {/* Content Sections */}
+          <View style={[styles.contentContainer, { justifyContent: 'center', alignItems: 'center', marginTop: 20 }]}>
+            <Text style={styles.sectionTitle}>Receive Payment</Text>
+            <QRCode
+              size={Dimensions.get('window').width * 0.8}
+              value={context.value.address}
+              ecl="L"
+            />
+            <View style={{ marginTop: 20, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={[styles.address, { color: '#000000' }]}>{context.value.address.substring(0, Math.round(context.value.address.length / 2))}{"\n"}{context.value.address.substring(Math.round(context.value.address.length / 2))}</Text>
+              <Text style={[styles.address, { color: '#000000' }]}></Text>
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={() => copyToClipboard()}
+              >
+                <Copy size={24} color="#000000" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+    );
+  }
+
+  const checkBalance = () => {
+    const algodClient = new algosdk.Algodv2(
+      "",
+      "https://go.getblock.io/cf51a02b9d9840679a91b7b02fdadcfe",
+      ""
+    );
+    algodClient
+      .accountInformation(context.value.address)
+      .do()
+      .then((accountInfo) => {
+        setTotalUsdValue(parseInt(`${accountInfo.amount}`)*0.1798 / 1000000);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
 
   return (
     <View style={styles.container}>
@@ -64,20 +168,20 @@ export default function HomeScreen() {
           {/* Badge and Logo Section */}
           <View style={styles.badgeContainer}>
             <View style={styles.badgeRow}>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.boltBadgeButton}
                 onPress={handleBoltBadgePress}
                 activeOpacity={0.8}
               >
                 <Image
-                  source={{ uri: 'https://github.com/kickiniteasy/bolt-hackathon-badge/blob/main/src/public/bolt-badge/white_circle_360x360/white_circle_360x360.png?raw=true' }}
+                  source={bolt}
                   style={styles.hackathonBadge}
                   resizeMode="contain"
                   onError={(error) => console.log('Bolt badge failed to load:', error.nativeEvent.error)}
                 />
               </TouchableOpacity>
               <Image
-                source={{ uri: 'https://raw.githubusercontent.com/kickiniteasy/bolt-hackathon-badge/3f09b71855feb7d3c02ed170ccae764b842cf4ce/src/public/algorand/wordmark-color.svg' }}
+                source={algo}
                 style={styles.algorandLogo}
                 resizeMode="contain"
                 onError={(error) => console.log('Algorand logo failed to load:', error.nativeEvent.error)}
@@ -86,11 +190,6 @@ export default function HomeScreen() {
             <Text style={styles.badgeText}>Powered by Algorand • Bolt Hackathon</Text>
           </View>
 
-          <Text style={styles.greeting}>Welcome back</Text>
-          <Text style={styles.address}>
-            {typeof address === 'string' ? `${address.slice(0, 6)}...${address.slice(-6)}` : ''}
-          </Text>
-          
           <View style={styles.balanceContainer}>
             <Text style={styles.balanceLabel}>Total Portfolio Value</Text>
             <Text style={styles.balance}>${totalUsdValue.toFixed(2)}</Text>
@@ -101,13 +200,13 @@ export default function HomeScreen() {
               <Send size={20} color="#FFFFFF" />
               <Text style={styles.actionButtonText}>Send</Text>
             </TouchableOpacity>
-            
-            <TouchableOpacity style={styles.actionButton}>
+
+            <TouchableOpacity style={styles.actionButton} onPress={() => setReceive(true)}>
               <Download size={20} color="#FFFFFF" />
               <Text style={styles.actionButtonText}>Receive</Text>
             </TouchableOpacity>
-            
-            <TouchableOpacity style={styles.actionButton} onPress={onRefresh}>
+
+            <TouchableOpacity style={styles.actionButton} onPress={() => checkBalance()}>
               <RefreshCw size={20} color="#FFFFFF" />
               <Text style={styles.actionButtonText}>Refresh</Text>
             </TouchableOpacity>
@@ -207,6 +306,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F9FAFB',
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
   },
   scrollView: {
     flex: 1,
