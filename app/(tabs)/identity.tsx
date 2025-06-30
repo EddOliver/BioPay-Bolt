@@ -8,15 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import {
-  Shield,
-  Star,
-  Gift,
-  Camera,
-  CheckCircle,
-  XCircle,
-  TrendingUp,
-} from 'lucide-react-native';
+import { Shield, Star, Gift, Camera, CircleCheck as CheckCircle, Circle as XCircle, TrendingUp } from 'lucide-react-native';
 import { useIdentityStore } from '@/stores/identityStore';
 import { useThemeStore } from '@/stores/themeStore';
 

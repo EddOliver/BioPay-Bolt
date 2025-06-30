@@ -8,17 +8,7 @@ import {
   Switch,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import {
-  Moon,
-  Sun,
-  Shield,
-  Bell,
-  Globe,
-  HelpCircle,
-  Info,
-  LogOut,
-  ChevronRight,
-} from 'lucide-react-native';
+import { Moon, Sun, Shield, Bell, Globe, CircleHelp as HelpCircle, Info, LogOut, ChevronRight } from 'lucide-react-native';
 import { useThemeStore } from '@/stores/themeStore';
 
 export default function SettingsScreen() {
